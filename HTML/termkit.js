@@ -14,10 +14,6 @@ $(document).ready(function () {
       view.newCommand();
     });    
   };
-  
-  $(document).mousedown(function () {
-    alert('wtf');
-  });
 });
 
 })(jQuery);
