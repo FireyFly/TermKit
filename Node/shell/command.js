@@ -211,13 +211,13 @@ exports.commandUnit.builtinCommand.prototype.spawn = function () {
       prefix = this.override || this.command[0];
 
   // Look up command.
-  if (!builtin.commands[prefix]) {
+  if (!builtin.commands[prefix] && this.override == null) {
     throw "Unknown command '"+ prefix +"'";
   }
 
   // Load handler.
   try {
-    this.handler = require('builtin/' + prefix);
+    this.handler = require('./builtin/' + prefix);
   } catch (e) {
     throw "Error loading handler '"+ prefix +"': " + e;
   }
