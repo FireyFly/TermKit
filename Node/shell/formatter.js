@@ -7,7 +7,7 @@ var fs = require('fs'),
     JSONPretty = require('misc').JSONPretty,
     composePath = require('misc').composePath,
     objectKeys = require('misc').objectKeys,
-    reader = require('reader'),
+    reader = require('./reader'),
     escapeBinary = require('misc').escapeBinary,
     escapeUnixText = require('misc').escapeUnixText;
 
