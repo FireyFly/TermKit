@@ -4,7 +4,7 @@ var termkit = {
 };
 
 // Load requirements.
-var http = require('http'),  
+var express = require('express')
     io = require('socket.io'),
     router = require("./router");
 
@@ -12,16 +12,13 @@ var http = require('http'),
 var config = require('./config').getConfig();
 
 // Set up http server.
-var server = http.createServer(function (request, result) { 
-//  result.writeHeader(200, {'Content-Type': 'text/html'}); 
-//  result.writeBody('<h1>TermKit</h1>');
-//  result.finish(); 
-});
-
+var server = express.createServer();
+server.use(express.static(__dirname + '/../HTML'));
 server.listen(2222);
 
 // Set up WebSocket and handlers.
 var ioServer = io.listen(server); 
+ioServer.set('log level', 2)
 ioServer.sockets.on('connection', function (client) {
   var p = new router.router(client);
 });
