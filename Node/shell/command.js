@@ -121,8 +121,36 @@ exports.commandFactory = function (command, emitter, invoke, exit, environment) 
   catch (e) {
     try {
       // Try native command.
+
+      // First, check if there actually is a binary with the given name.
+      // This is required because this function relies on the try-catch
+      // mechanism for flow control, but `unixCommand` relies on the
+      // asynchronous `spawn` from the 'child_process' module.
+      var commandName = command[0],
+          fs = require('fs');
+
+      var isBinary = process.env['PATH'].split(":").some(function (pathEntry) {
+        return contains(fs.readdirSync(pathEntry), commandName);
+
+        function contains(arr, element) {
+          return arr.indexOf(element) >= 0;
+        }
+      });
+
+      if (!isBinary) {
+        throw new Error("Not a native command: '" + commandName + "'.")
+      }
+
       unit = new exports.commandUnit.unixCommand(command, emitter, invoke, exit, environment);
-      unit.spawn();
+
+      try {
+        unit.spawn();
+      }
+      catch (e) {
+        console.warn("Fallback failed!")
+        console.warn(e.stack || e)
+        throw e
+      }
     }
     catch (e) {
       // Execute null.js fallback.
